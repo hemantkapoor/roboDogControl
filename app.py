@@ -3,6 +3,7 @@ from importlib import import_module
 import os
 from flask import Flask, render_template, Response, send_from_directory
 from flask_cors import *
+from zmqServer import *
 # import camera driver
 
 from camera_opencv import Camera
@@ -82,4 +83,5 @@ class webapp:
 if __name__ == '__main__':
     global flask_app
     flask_app = webapp()
+    testServer = zmqServer(camera)
     flask_app.startthread()

@@ -1,7 +1,9 @@
 import socket
 from commandlist import *
 import time
+from utilities import *
 from _thread import *
+from zmqServer import *
 
 #host = '127.0.0.1'
 host = ''
@@ -61,19 +63,15 @@ class Server():
         cpuInfo.preamble.source = ROBOT_SOURCE
         cpuInfo.preamble.target = preamble.source
         cpuInfo.preamble.function = RESP_CPU_STATUS_FUNC
-        cpuInfo.cpuTemp = 50
-        cpuInfo.cpuRAM = 20
+        cpuInfo.cpuTemp = get_cpu_tempfunc()
+        cpuInfo.cpuRAM = int(get_ram_info())
         dataToSend = bytearray(cpuInfo)
         connection.send(dataToSend)
         print(dataToSend)
 
 if __name__ == '__main__':
     testServer = Server()
-    # preamble = CommandHeader()
-    # preamble.function = RESP_CPU_STATUS_FUNC
-    # dataToSend = bytearray(preamble)
-    # print(dataToSend)
-    # testServer.handleCommand(None, dataToSend)
     testServer.start_server(host, port)
+    testServer = zmqServer()
     while True:
         time.sleep(0.1)
