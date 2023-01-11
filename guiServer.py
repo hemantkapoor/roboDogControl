@@ -21,7 +21,6 @@ class Server():
             try:
                 Recvdata = connection.recv(2048)
                 data = bytearray(Recvdata)
-                print(type(data))
                 self.handleCommand(connection, data)
             except Exception as e:
                 print(e)
@@ -50,12 +49,12 @@ class Server():
 
     # ************** COMMAND HANDLERS IMPLEMENTED HERE
     def handleCommand(self, connection, data):
-        print('Got data from server')
         preamble = CommandHeader.from_buffer(data)
-        print(preamble.function)
         #cHECK IF cpu INFORMATION RECEIVED
         if preamble.function == REQ_CPU_STATUS_FUNC:
             self.handleCpuStatSunction(connection, preamble)
+        elif preamble.function == REQ_MOVEMENT:
+            self.handleMovement(connection, data)
 
     def handleCpuStatSunction(self, connection, preamble):
         print("Handling CPU Stat")
@@ -67,7 +66,16 @@ class Server():
         cpuInfo.cpuRAM = int(get_ram_info())
         dataToSend = bytearray(cpuInfo)
         connection.send(dataToSend)
-        print(dataToSend)
+
+    def handleMovement(self, connection, data):
+        print("Handling Movement command")
+        mov = ControlMovementCMD.from_buffer(data)
+        print("Body part = " + str(mov.bodyPart))
+        print("Direction = " + str(mov.direction))
+        print("Action = " + str(mov.action))
+        print("Speed = " + str(mov.speed))
+
+
 
 if __name__ == '__main__':
     testServer = Server()
