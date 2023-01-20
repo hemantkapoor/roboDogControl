@@ -9,6 +9,7 @@ from Control import *
 import Command
 import Action
 from itertools import groupby
+import stadia
 
 #host = '127.0.0.1'
 host = ''
@@ -20,6 +21,7 @@ class Server():
     def __init__(self):
         self.bodyControl = Control()
         self.actions = Action.Action(self.bodyControl)
+        self._stadia = stadia.Stadia(self.bodyControl)
         self.bodyControl.Thread_conditiona.start()
         self.cmd = Command.COMMAND()
         self.state = RELAX
